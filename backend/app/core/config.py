@@ -23,7 +23,7 @@ class Settings(BaseSettings):
 
     # AI Computer Vision Provider Configuration
     # Supported: 'roboflow', 'huggingface', 'local_cv', 'unconfigured', 'demo'
-    AI_PROVIDER: str = "demo"
+    AI_PROVIDER: str = "local_cv"
     AI_API_BASE_URL: str = "https://detect.roboflow.com"
     AI_API_KEY: Optional[str] = None
     AI_MODEL: str = "mask-wearing-detection/1"
