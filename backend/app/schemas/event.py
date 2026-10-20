@@ -1,5 +1,5 @@
 from typing import Optional, Dict, Any, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class EventOut(BaseModel):
     id: str = Field(..., alias="_id")
@@ -16,8 +16,7 @@ class EventOut(BaseModel):
     acknowledged_by: Optional[str] = None
     created_at: str
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 class EventFilterParams(BaseModel):
     start_date: Optional[str] = None
