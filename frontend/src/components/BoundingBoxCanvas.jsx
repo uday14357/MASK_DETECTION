@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 /**
  * Renders normalized bounding boxes onto an HTML5 canvas overlay aligned with video or image.
+ * Uses exact aspect-ratio calculation to account for letterbox/pillarbox in object-contain video containers.
  * Color standards from specification:
  * - Green (#16A34A): Mask
  * - Red (#DC2626): No Mask
@@ -11,6 +12,7 @@ export default function BoundingBoxCanvas({
   detections = [],
   width = 640,
   height = 480,
+  videoRef = null,
   isMirrored = false,
   className = '',
   warning = null
@@ -21,9 +23,46 @@ export default function BoundingBoxCanvas({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+
+    // Dynamically match canvas internal pixel buffer to its rendered DOM dimensions
+    const rect = canvas.getBoundingClientRect();
+    const displayW = Math.round(rect.width) || width || 640;
+    const displayH = Math.round(rect.height) || height || 480;
+
+    if (canvas.width !== displayW || canvas.height !== displayH) {
+      canvas.width = displayW;
+      canvas.height = displayH;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (!detections || detections.length === 0) return;
+
+    // Calculate actual content area if letterboxed/pillarboxed inside an object-contain video element
+    const video = videoRef?.current;
+    let renderW = displayW;
+    let renderH = displayH;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (video && video.videoWidth && video.videoHeight) {
+      const vRatio = video.videoWidth / video.videoHeight;
+      const cRatio = displayW / displayH;
+
+      if (cRatio > vRatio) {
+        // Pillarboxed: black bars on left and right
+        renderH = displayH;
+        renderW = displayH * vRatio;
+        offsetX = (displayW - renderW) / 2;
+        offsetY = 0;
+      } else {
+        // Letterboxed: black bars on top and bottom
+        renderW = displayW;
+        renderH = displayW / vRatio;
+        offsetX = 0;
+        offsetY = (displayH - renderH) / 2;
+      }
+    }
 
     detections.forEach((det) => {
       const { label, confidence, bbox } = det;
@@ -44,16 +83,11 @@ export default function BoundingBoxCanvas({
         labelText = `Uncertain: ${(confidence * 100).toFixed(0)}%`;
       }
 
-      // Convert coordinates (normalized 0-1) to canvas pixels
-      let bx = bbox.x * canvas.width;
-      let by = bbox.y * canvas.height;
-      let bw = bbox.width * canvas.width;
-      let bh = bbox.height * canvas.height;
-
-      // Adjust for mirrored preview if needed
-      if (isMirrored) {
-        bx = canvas.width - (bx + bw);
-      }
+      // Convert normalized coordinates (0-1) to pixel coordinates
+      let bx = offsetX + (isMirrored ? (1.0 - (bbox.x + bbox.width)) : bbox.x) * renderW;
+      let by = offsetY + bbox.y * renderH;
+      let bw = bbox.width * renderW;
+      let bh = bbox.height * renderH;
 
       // Draw bounding box with rounded corners and glowing outline
       ctx.save();
@@ -73,8 +107,8 @@ export default function BoundingBoxCanvas({
       const textMetrics = ctx.measureText(labelText);
       const pillWidth = textMetrics.width + 16;
       const pillHeight = 22;
-      const pillX = bx;
-      const pillY = Math.max(0, by - pillHeight - 4);
+      const pillX = Math.max(offsetX, Math.min(bx, offsetX + renderW - pillWidth));
+      const pillY = Math.max(offsetY, by - pillHeight - 4);
 
       ctx.fillStyle = labelBgColor;
       ctx.beginPath();
@@ -98,7 +132,7 @@ export default function BoundingBoxCanvas({
       ctx.fillText(warning, 18, 27);
       ctx.restore();
     }
-  }, [detections, width, height, isMirrored, warning]);
+  }, [detections, width, height, videoRef, isMirrored, warning]);
 
   return (
     <canvas

@@ -45,6 +45,7 @@ export default function LiveDetectionPage() {
   const isAnalyzingRef = useRef(analyzing);
   const isProcessingFrameRef = useRef(false);
   const analysisTimerRef = useRef(null);
+  const latestFrameIdRef = useRef(0);
 
   isAnalyzingRef.current = analyzing;
 
@@ -130,10 +131,12 @@ export default function LiveDetectionPage() {
       return;
     }
 
+    const currentFrameId = ++latestFrameIdRef.current;
+
     try {
       isProcessingFrameRef.current = true;
 
-      // Render frame to optimized offscreen canvas (max 640px width)
+      // Render frame to optimized offscreen canvas (max 640px width preserving aspect ratio)
       let targetW = video.videoWidth || 640;
       let targetH = video.videoHeight || 480;
       const maxDim = 640;
@@ -153,6 +156,11 @@ export default function LiveDetectionPage() {
       const response = await api.detectFrame(base64Data, 'webcam', 'cam-default-webcam');
       const roundTripLatency = Math.round(performance.now() - startTime);
 
+      // Discard out-of-order or stale response if a newer frame has already begun
+      if (currentFrameId < latestFrameIdRef.current) {
+        return;
+      }
+
       setDetections(response.detections || []);
       setSummary(
         response.summary || {
@@ -168,8 +176,10 @@ export default function LiveDetectionPage() {
       setWarningText(response.warning || null);
       setAiError(null);
     } catch (err) {
-      console.error('Frame analysis failed:', err);
-      setAiError(err.message || 'Detection request failed');
+      if (currentFrameId >= latestFrameIdRef.current) {
+        console.error('Frame analysis failed:', err);
+        setAiError(err.message || 'Detection request failed');
+      }
     } finally {
       isProcessingFrameRef.current = false;
     }
@@ -191,7 +201,7 @@ export default function LiveDetectionPage() {
       if (!isSubscribed) return;
       await captureFrameAndAnalyze();
       if (isSubscribed && isAnalyzingRef.current) {
-        analysisTimerRef.current = setTimeout(runLoop, frameInterval);
+        analysisTimerRef.current = setTimeout(runLoop, Math.min(frameInterval, 250));
       }
     };
 
@@ -331,6 +341,7 @@ export default function LiveDetectionPage() {
           {cameraActive && (
             <BoundingBoxCanvas
               detections={detections}
+              videoRef={videoRef}
               width={videoRef.current?.videoWidth || 640}
               height={videoRef.current?.videoHeight || 480}
               isMirrored={isMirrored}

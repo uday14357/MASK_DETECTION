@@ -46,6 +46,7 @@ export default function LandingPage() {
   const streamRef = useRef(null);
   const isProcessingRef = useRef(false);
   const timerRef = useRef(null);
+  const latestFrameIdRef = useRef(0);
 
   const stopCamera = () => {
     if (timerRef.current) {
@@ -101,6 +102,8 @@ export default function LandingPage() {
     const video = videoRef.current;
     if (video.readyState < 2 || video.videoWidth === 0) return;
 
+    const currentFrameId = ++latestFrameIdRef.current;
+
     try {
       isProcessingRef.current = true;
       let targetW = video.videoWidth || 640;
@@ -121,13 +124,20 @@ export default function LandingPage() {
       const res = await api.detectFrame(base64Data, 'webcam', 'cam-default-webcam');
       const roundTrip = Math.round(performance.now() - startT);
 
+      // Discard stale/out-of-order response if a newer frame has already begun
+      if (currentFrameId < latestFrameIdRef.current) {
+        return;
+      }
+
       setDetections(res.detections || []);
       setSummary(res.summary || { faces_detected: 0, mask_count: 0, no_mask_count: 0, uncertain_count: 0 });
       setLatency(res.latency_ms || roundTrip);
       setWarningText(res.warning || null);
       setAiError(null);
     } catch (err) {
-      setAiError(err.message || 'Frame processing error');
+      if (currentFrameId >= latestFrameIdRef.current) {
+        setAiError(err.message || 'Frame processing error');
+      }
     } finally {
       isProcessingRef.current = false;
     }
@@ -140,7 +150,7 @@ export default function LandingPage() {
       if (!isMounted) return;
       await analyzePreviewFrame();
       if (isMounted) {
-        timerRef.current = setTimeout(loop, 900);
+        timerRef.current = setTimeout(loop, 250);
       }
     };
     loop();
@@ -253,6 +263,7 @@ export default function LandingPage() {
             {cameraActive && (
               <BoundingBoxCanvas
                 detections={detections}
+                videoRef={videoRef}
                 width={videoRef.current?.videoWidth || 640}
                 height={videoRef.current?.videoHeight || 480}
                 isMirrored={isMirrored}
