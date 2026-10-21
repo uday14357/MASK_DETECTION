@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
 
@@ -25,6 +25,7 @@ class UserOut(BaseModel):
     created_at: str
     last_login_at: Optional[str] = None
 
-    model_config = ConfigDict(populate_by_name=True)
+    class Config:
+        populate_by_name = True
 
 TokenResponse.model_rebuild()

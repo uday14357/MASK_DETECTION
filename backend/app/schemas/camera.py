@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 
 class CameraCreate(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
@@ -26,4 +26,5 @@ class CameraOut(BaseModel):
     updated_at: str
     last_seen_at: Optional[str] = None
 
-    model_config = ConfigDict(populate_by_name=True)
+    class Config:
+        populate_by_name = True

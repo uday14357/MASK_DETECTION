@@ -33,7 +33,7 @@ export default function AppLayout() {
 
   // Derive current page title from path
   const currentNav = navItems.find((item) => item.path === location.pathname);
-  const pageTitle = currentNav ? currentNav.name : 'MaskGuard AI';
+  const pageTitle = currentNav ? currentNav.name : 'Mask Detection System';
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
@@ -43,7 +43,7 @@ export default function AppLayout() {
           <div className="w-8 h-8 rounded-lg bg-teal-500/20 border border-teal-400/30 flex items-center justify-center text-teal-400">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <span className="font-bold text-lg tracking-tight">MaskGuard AI</span>
+          <span className="font-bold text-lg tracking-tight">Mask Detection System</span>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -75,7 +75,7 @@ export default function AppLayout() {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <span className="font-bold text-white text-base tracking-tight block">MaskGuard AI</span>
+              <span className="font-bold text-white text-base tracking-tight block">Mask Detection System</span>
               <span className="text-[11px] text-teal-400/90 font-medium block">Enterprise Monitoring</span>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function AppLayout() {
         <header className="hidden md:flex h-16 bg-white border-b border-slate-200/80 px-8 items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-2 text-sm text-slate-500">
             <span className="hover:text-slate-800 cursor-pointer" onClick={() => navigate('/dashboard')}>
-              MaskGuard
+              Mask Detection System
             </span>
             <ChevronRight className="w-4 h-4 text-slate-400" />
             <span className="font-semibold text-slate-900">{pageTitle}</span>

@@ -10,7 +10,7 @@ router = APIRouter(tags=["Health"])
 async def health_check():
     return {
         "status": "healthy",
-        "service": "MaskGuard AI API",
+        "service": "Mask Detection System API",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "environment": settings.ENVIRONMENT
     }

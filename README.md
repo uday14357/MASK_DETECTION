@@ -1,8 +1,8 @@
-# MaskGuard AI — Smart Face Mask Monitoring System
+# Mask Detection System — Smart Face Mask Monitoring
 
 > **“Smarter Monitoring. Safer Spaces.”**
 
-MaskGuard AI is a full-stack, enterprise-grade face-mask compliance and computer-vision monitoring application. Engineered for healthcare facilities, research cleanrooms, schools, and commercial workspaces, it pairs high-precision computer vision inference with automated alert management, deduplication cooldowns, audit trails, and compliance reporting.
+Mask Detection System is a full-stack, enterprise-grade face-mask compliance and computer-vision monitoring application. Engineered for healthcare facilities, research cleanrooms, schools, and commercial workspaces, it pairs high-precision computer vision inference with automated alert management, deduplication cooldowns, audit trails, and compliance reporting.
 
 ---
 
@@ -179,4 +179,4 @@ maskguard-ai/
 
 ## License & Compliance Disclaimer
 
-MaskGuard AI is designed as an assistance and safety monitoring tool. It does not provide medical certification, guarantee compliance, or replace qualified human judgment.
+Mask Detection System is designed as an assistance and safety monitoring tool. It does not provide medical certification, guarantee compliance, or replace qualified human judgment.

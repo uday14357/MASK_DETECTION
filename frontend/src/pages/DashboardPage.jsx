@@ -337,7 +337,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-sm font-bold text-slate-900">Recent Detection Events</h2>
-              <p className="text-xs text-slate-500">Latest automated alerts recorded by MaskGuard AI</p>
+              <p className="text-xs text-slate-500">Latest automated alerts recorded by Mask Detection System</p>
             </div>
             <button
               onClick={() => navigate('/events')}

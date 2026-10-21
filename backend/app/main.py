@@ -81,7 +81,7 @@ async def lifespan(app: FastAPI):
     await DatabaseManager.close()
 
 app = FastAPI(
-    title="MaskGuard AI API",
+    title="Mask Detection System API",
     description="Enterprise Smart Face Mask Monitoring & Computer Vision System",
     version="1.0.0",
     lifespan=lifespan

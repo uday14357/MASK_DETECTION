@@ -170,7 +170,7 @@ export default function LandingPage() {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <span className="font-bold text-xl text-brand-navy tracking-tight">MaskGuard AI</span>
+              <span className="font-bold text-xl text-brand-navy tracking-tight">Mask Detection System</span>
               <span className="text-xs text-brand-teal font-semibold block leading-none">Smart Safety Vision</span>
             </div>
           </div>
@@ -206,7 +206,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="mt-6 text-base sm:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            MaskGuard AI delivers automated face-mask classification and real-time compliance tracking across hospital wards,
+            Mask Detection System delivers automated face-mask classification and real-time compliance tracking across hospital wards,
             laboratories, cleanrooms, and workplaces using computer vision.
           </p>
 
@@ -470,11 +470,11 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <span className="font-bold text-white text-base">MaskGuard AI</span>
+            <span className="font-bold text-white text-base">Mask Detection System</span>
           </div>
 
           <p className="text-xs text-slate-400 text-center">
-            © {new Date().getFullYear()} MaskGuard AI Systems. All rights reserved. “Smarter Monitoring. Safer Spaces.”
+            © {new Date().getFullYear()} Mask Detection System. All rights reserved. “Smarter Monitoring. Safer Spaces.”
           </p>
 
           <div className="flex items-center gap-6 text-xs">

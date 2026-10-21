@@ -1,7 +1,9 @@
 import io
+# pyrefly: ignore[missing-import]
 import pytest
 import base64
 from PIL import Image
+# pyrefly: ignore[missing-import]
 from app.core.security import hash_password, verify_password
 
 @pytest.fixture

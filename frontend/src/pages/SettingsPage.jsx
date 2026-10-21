@@ -252,7 +252,7 @@ export default function SettingsPage() {
             Privacy & Compliance Notice
           </h3>
           <p className="leading-relaxed">
-            MaskGuard AI is strictly designed as an operational safety and compliance monitoring tool. It performs object detection and mask classification only. The system does not perform facial recognition, demographic profiling, person identification, or store biometric fingerprints.
+            Mask Detection System is strictly designed as an operational safety and compliance monitoring tool. It performs object detection and mask classification only. The system does not perform facial recognition, demographic profiling, person identification, or store biometric fingerprints.
           </p>
           <p className="leading-relaxed">
             Webcam access is requested only upon explicit user action and is immediately terminated when camera monitoring is stopped or when the user navigates away from the monitoring interface.
